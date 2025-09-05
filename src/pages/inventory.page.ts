@@ -49,7 +49,18 @@ export class InventoryPage {
     return productList;
   }
 
-    async addProductsToCart(quantity: number = 2): Promise<ProductInfo[]> {
+
+  private async selectRandomProducts(quantity: number): Promise<ProductInfo[]> {
+    if (quantity > this.availableProducts.length) {
+      throw new Error(`No se pueden seleccionar ${quantity} productos. Solo hay ${this.availableProducts.length} disponibles.`);
+    }
+    const shuffled = [...this.availableProducts].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, quantity);
+
+    return selected;
+  }
+
+  async addProductsToCart(quantity: number = 2): Promise<ProductInfo[]> {
     this.selectedProducts = await this.selectRandomProducts(quantity);
 
     for (let i = 0; i < this.selectedProducts.length; i++) {
@@ -61,14 +72,9 @@ export class InventoryPage {
     return this.selectedProducts;
   }
 
-    private async selectRandomProducts(quantity: number): Promise<ProductInfo[]> {
-    if (quantity > this.availableProducts.length) {
-      throw new Error(`No se pueden seleccionar ${quantity} productos. Solo hay ${this.availableProducts.length} disponibles.`);
-    }
-    const shuffled = [...this.availableProducts].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, quantity);
-
-    return selected;
+  async goToCart(): Promise<void> {
+    await this.shoppingCartLink.click();
   }
+
 
 }
