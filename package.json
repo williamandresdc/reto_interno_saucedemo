@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright test --reporter=html && playwright show-report",
+    "allure:reportlite": "allure generate --clean --single-file allure-results",
+    "allure:report": "allure generate --clean --single-file allure-results -o allure-report && allure open allure-report"
 
   },
   "keywords": [],
