@@ -15,7 +15,9 @@ Este proyecto incluye dos tipos de automatización:
 -  **Selección dinámica de productos** - Los productos se extraen automáticamente de la página web
 -  **Page Object Model (POM)** - Arquitectura modular y mantenible  
 -  **Pruebas de API REST** - Validación completa de endpoints con TypeScript
--  **Constantes organizadas** - Enums y constantes centralizadas por funcionalidad
+-  **Arquitectura limpia** - Separación clara entre constantes, utilidades e interfaces
+-  **Funciones utilitarias modulares** - Generación de usuarios y patrones de validación reutilizables
+-  **Configuración de entornos** - Soporte para .env con valores por defecto
 -  **TypeScript** - Tipado fuerte para mayor confiabilidad
 -  **Validaciones robustas** - Verificaciones exhaustivas en cada paso
 -  **Test Steps detallados** - Estructura BDD con `test.step()` para mejor trazabilidad
@@ -188,10 +190,16 @@ allure serve allure-results
 ```
 📦 reto_pichincha/
 ├── 📂 src/
+│   ├── 📂 constants/                    # Constantes y configuraciones estáticas
+│   │   ├── 📄 api-messages.constants.ts # Enums de mensajes, HTTP status, headers
+│   │   ├── 📄 api-urls.constants.ts     # URLs de endpoints (con soporte .env)
+│   │   ├── 📄 api-users.constants.ts    # Usuarios predefinidos para pruebas
+│   │   └── 📄 messages.constants.ts     # Mensajes para pruebas E2E
 │   ├── 📂 data/
 │   │   └── 📄 test-data.ts              # Datos de prueba centralizados
-│   ├── 📂 interfaces/
-│   │   └── 📄 user-data.interface.ts    # Interfaces TypeScript
+│   ├── 📂 interfaces/                   # Definiciones de tipos TypeScript
+│   │   ├── 📄 api-data.interface.ts     # Interfaces para datos de API
+│   │   └── 📄 user-data.interface.ts    # Interfaces para datos E2E
 │   ├── 📂 pages/                        # Page Object Model
 │   │   ├── 📄 index.ts                  # Exportaciones centralizadas
 │   │   ├── 📄 login.page.ts             # Página de login
@@ -200,13 +208,9 @@ allure serve allure-results
 │   │   ├── 📄 checkout-information-step-one.page.ts  # Información checkout
 │   │   ├── 📄 checkout-overview-step-two.page.ts     # Resumen checkout
 │   │   └── 📄 checkout-complete.page.ts # Confirmación final
-│   └── 📂 utils/
-│       └── 📂 constants/                #  Constantes organizadas por funcionalidad
-│           ├── 📄 api-urls.constants.ts      # URLs de API endpoints
-│           ├── 📄 api-messages.constants.ts  # Mensajes, status codes y validaciones
-│           ├── 📄 api-users.constants.ts     # Usuarios y credenciales para API
-│           ├── 📄 index.ts              # Exportaciones de constantes
-│           └── 📄 messages.constants.ts # Constantes de mensajes E2E
+│   └── 📂 utils/                        # Funciones utilitarias reutilizables
+│       ├── 📄 user-generator.util.ts    # Generación dinámica de usuarios
+│       └── 📄 validation-patterns.util.ts # Patrones regex para validaciones
 ├── 📂 tests/
 │   ├── 📂 helpers/
 │   │   └── 📄 sauce-demo-fixture.ts     # Fixtures personalizadas
@@ -281,7 +285,7 @@ Scenario: Autenticación con credenciales inválidas
 | `/login` | POST | Login inválido | Status 200, errorMessage presente |
 
 ##  🆕 Mejoras Implementadas en API
-
+  
 ### **Estructura BDD con test.step()**
 
 Cada test utiliza `test.step()` para mejor trazabilidad y reportes:
