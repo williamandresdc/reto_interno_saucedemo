@@ -1,12 +1,12 @@
 
 import { ApiCredential } from '../interfaces/api-data.interface';
+import { DEFAULT_API_PASSWORD } from '../utils/user-generator.util';
 
-const DEFAULT_PASSWORD = Buffer.from('123456').toString('base64');
 
 export const API_TEST_USERS = {
     EXISTING_USER: {
         user: 'retointernoW',
-        password: DEFAULT_PASSWORD
+        password: DEFAULT_API_PASSWORD
     } as ApiCredential,
 
     INVALID_USER: {
@@ -14,15 +14,3 @@ export const API_TEST_USERS = {
         password: 'password_invalida'
     } as ApiCredential,
 } as const;
-
-
-export const generateUniqueUser = (): ApiCredential => ({
-    user: `retointerno_${Date.now()}`,
-    password: DEFAULT_PASSWORD
-});
-
-
-export const generateUserWithPrefix = (prefix: string = 'testuser'): ApiCredential => ({
-    user: `${prefix}_${Date.now()}`,
-    password: DEFAULT_PASSWORD
-});

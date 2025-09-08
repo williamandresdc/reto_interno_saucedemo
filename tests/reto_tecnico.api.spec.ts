@@ -1,8 +1,10 @@
 import { test, expect, APIResponse } from '@playwright/test';
 import { DEMOBLAZE_URLS } from '../src/constants/api-urls.constants';
-import { DemoblazeErrorMessages, HttpStatus, HEADERS, ApiSuccessMessages, API_VALIDATION_PATTERNS } from '../src/constants/api-messages.constants';
-import { API_TEST_USERS, generateUniqueUser } from '../src/constants/api-users.constants';
+import { DemoblazeErrorMessages, HttpStatus, HEADERS, ApiSuccessMessages } from '../src/constants/api-messages.constants';
+import { API_TEST_USERS } from '../src/constants/api-users.constants';
 import { ApiCredential } from '../src/interfaces/api-data.interface';
+import { generateUniqueUser } from '../src/utils/user-generator.util';
+import { API_VALIDATION_PATTERNS } from '../src/utils/validation-patterns.util';
 
 /**
   Feature: Validación de API REST para Demoblaze
