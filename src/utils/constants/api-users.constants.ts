@@ -1,8 +1,5 @@
 
-export interface ApiCredential { //TODO mover las interfaces para un archivo aparte
-    user: string;
-    password: string;
-}
+import { ApiCredential } from '../../interfaces/api-data.interface';
 
 const DEFAULT_PASSWORD = Buffer.from('123456').toString('base64');
 
