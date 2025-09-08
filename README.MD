@@ -1,19 +1,25 @@
-#  SauceDemo E2E Test Automation
+#  SauceDemo E2E & API Test Automation
 
-Proyecto de automatización de pruebas E2E para la pagina demo: SauceDemo utilizando Playwright con TypeScript y Page Object Model (POM).
-Además se utiliza .env para manejo de data sensible. también se agrega compatibilidad con reportes de Allure
+Proyecto de automatización de pruebas E2E para SauceDemo y pruebas de API para Demoblaze utilizando Playwright con TypeScript y Page Object Model (POM).
+Además se utiliza .env para manejo de data sensible y compatibilidad con reportes de Allure.
 
 ## Descripción
 
-Este proyecto automatiza el flujo completo de compra en la aplicación [SauceDemo](https://www.saucedemo.com/), desde el login hasta la confirmación de compra, utilizando selección dinámica de productos y validaciones robustas.
+Este proyecto incluye dos tipos de automatización:
+
+1. **Pruebas E2E** - Automatiza el flujo completo de compra en [SauceDemo](https://www.saucedemo.com/)
+2. **Pruebas de API** - Valida endpoints REST de [Demoblaze API](https://api.demoblaze.com/) para registro y autenticación
 
 ###  Características principales
 
 -  **Selección dinámica de productos** - Los productos se extraen automáticamente de la página web
--  **Page Object Model (POM)** - Arquitectura modular y mantenible
+-  **Page Object Model (POM)** - Arquitectura modular y mantenible  
+-  **Pruebas de API REST** - Validación completa de endpoints con TypeScript
+-  **Constantes organizadas** - Enums y constantes centralizadas por funcionalidad
 -  **TypeScript** - Tipado fuerte para mayor confiabilidad
 -  **Validaciones robustas** - Verificaciones exhaustivas en cada paso
--  **Reportes detallados** - Múltiples formatos de reportes disponibles. Reporte propio de Playwright + Trace
+-  **Test Steps detallados** - Estructura BDD con `test.step()` para mejor trazabilidad
+-  **Reportes detallados** - Múltiples formatos de reportes disponibles
 -  **Allure Reports** - Reportes avanzados con gráficos y métricas
 
 ##  Pasos para ejecución desde 0
@@ -97,14 +103,17 @@ npm run allure:report
 ###  Ejecución Básica
 
 ```bash
-# Ejecutar todas las pruebas
+# Ejecutar todas las pruebas (E2E + API)
 npx playwright test
+
+# Ejecutar solo pruebas E2E
+npx playwright test tests/flujo_reto_tecnico.spec.ts
+
+# Ejecutar solo pruebas de API
+npx playwright test tests/reto_tecnico.api.spec.ts --project=api-tests
 
 # Ejecutar pruebas en modo headed (ver navegador)
 npx playwright test --headed
-
-# Ejecutar solo el test específico de SauceDemo
-npx playwright test tests/flujo_reto_tecnico.spec.ts
 
 # Ejecutar con interfaz gráfica interactiva
 npx playwright test --ui
@@ -192,13 +201,17 @@ allure serve allure-results
 │   │   ├── 📄 checkout-overview-step-two.page.ts     # Resumen checkout
 │   │   └── 📄 checkout-complete.page.ts # Confirmación final
 │   └── 📂 utils/
-│       └── 📂 constants/
+│       └── 📂 constants/                #  Constantes organizadas por funcionalidad
+│           ├── 📄 api-urls.constants.ts      # URLs de API endpoints
+│           ├── 📄 api-messages.constants.ts  # Mensajes, status codes y validaciones
+│           ├── 📄 api-users.constants.ts     # Usuarios y credenciales para API
 │           ├── 📄 index.ts              # Exportaciones de constantes
-│           └── 📄 messages.constants.ts # Constantes de mensajes
+│           └── 📄 messages.constants.ts # Constantes de mensajes E2E
 ├── 📂 tests/
 │   ├── 📂 helpers/
 │   │   └── 📄 sauce-demo-fixture.ts     # Fixtures personalizadas
-│   └── 📄 flujo_reto_tecnico.spec.ts    # Test principal E2E
+│   ├── 📄 flujo_reto_tecnico.spec.ts    #  Test principal E2E (SauceDemo)
+│   └── 📄 reto_tecnico.api.spec.ts      #  Tests de API REST (Demoblaze)
 ├── 📂 test-results/                     # Resultados de pruebas
 ├── 📂 playwright-report/                # Reportes HTML nativos
 ├── 📂 allure-results/                   # Datos para Allure
@@ -208,9 +221,9 @@ allure serve allure-results
 └── 📄 README.md                         # Este archivo
 ```
 
-##  Escenario de Prueba
+##  Escenarios de Prueba
 
-###  Historia de Usuario
+###  Historia de Usuario E2E (SauceDemo)
 ```gherkin
 Feature: Flujo de compra en SauceDemo
   Como usuario de SauceDemo
@@ -225,7 +238,31 @@ Scenario: Completar compra con 2 productos aleatorios
   Then debería visualizar el mensaje de confirmación "THANK YOU FOR YOUR ORDER"
 ```
 
-###  Pasos del Test
+###  🔗 Historia de Usuario API (Demoblaze)
+```gherkin
+Feature: Validación de API REST para Demoblaze
+  Como QA Automatizador de pruebas
+  Quiero validar las funcionalidades de la API de Demoblaze
+  Para asegurar que los endpoints de registro y autenticación funcionan correctamente
+
+Scenario: Registro exitoso de nuevo usuario
+  When envío una petición POST al endpoint de registro con credenciales nuevas y válidas
+  Then debería recibir un status 200 y un cuerpo de respuesta vacío
+
+Scenario: Validación de usuario existente
+  When intento registrar un usuario ya registrado
+  Then debería recibir un mensaje de error notificando que el usuario ya existe
+
+Scenario: Autenticación con credenciales válidas
+  When envío una petición POST al endpoint de login con credenciales válidas
+  Then debería recibir un token de autenticación válido
+
+Scenario: Autenticación con credenciales inválidas
+  When envío una petición POST al endpoint de login con credenciales inválidas
+  Then debería recibir un mensaje de error
+```
+
+###  📋 Pasos del Test E2E
 
 1. ** Autenticación** - Login con credenciales válidas
 2. ** Selección de productos** - Agregar 2 productos aleatorios
@@ -233,6 +270,33 @@ Scenario: Completar compra con 2 productos aleatorios
 4. ** Checkout información** - Completar datos personales
 5. ** Revisión de pedido** - Validar resumen y totales
 6. ** Confirmación** - Finalizar compra y validar mensaje
+
+###  🔗 Endpoints de API Validados
+
+| Endpoint | Método | Descripción | Validaciones |
+|----------|--------|-------------|--------------|
+| `/signup` | POST | Registro de usuario | Status 200, cuerpo vacío, sin errorMessage |
+| `/signup` | POST | Usuario existente | Status 200, errorMessage presente |
+| `/login` | POST | Login válido | Status 200, token válido, sin errorMessage |
+| `/login` | POST | Login inválido | Status 200, errorMessage presente |
+
+##  🆕 Mejoras Implementadas en API
+
+### **Estructura BDD con test.step()**
+
+Cada test utiliza `test.step()` para mejor trazabilidad y reportes:
+
+```typescript
+test('Validar el registro exitoso de un nuevo usuario', async ({ request }) => {
+  await test.step('When envío una petición POST al endpoint de registro', async () => {
+    // Lógica de la petición
+  });
+
+  await test.step('Then debería recibir un status 200 y cuerpo vacío', async () => {
+    // Validaciones
+  });
+});
+```
 
 ##  Configuración Avanzada
 
