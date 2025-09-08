@@ -1,5 +1,5 @@
 
-import { ApiCredential } from '../../interfaces/api-data.interface';
+import { ApiCredential } from '../interfaces/api-data.interface';
 
 const DEFAULT_PASSWORD = Buffer.from('123456').toString('base64');
 

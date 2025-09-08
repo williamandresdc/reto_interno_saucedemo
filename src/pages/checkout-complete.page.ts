@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from '@playwright/test';
-import { CHECKOUT_COMPLETE_MESSAGES } from '../utils/constants/messages.constants';
+import { CHECKOUT_COMPLETE_MESSAGES } from '../constants/messages.constants';
 
 export class CheckoutCompletePage {
   private page: Page;
