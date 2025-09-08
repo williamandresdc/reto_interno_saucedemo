@@ -35,7 +35,7 @@ Este proyecto incluye dos tipos de automatización:
 #### 1. Clonar o descargar el proyecto
 ```bash
 # Si tienes Git instalado
-git clone <url-del-repositorio> //TODO cambiar
+git clone https://github.com/williamandresdc/reto_interno_saucedemo.git
 cd reto_pichincha
 
 # O simplemente descarga y extrae el ZIP del proyecto
