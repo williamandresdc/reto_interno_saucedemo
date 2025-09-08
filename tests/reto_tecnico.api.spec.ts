@@ -51,12 +51,13 @@ test.describe.serial('Pruebas API para Demoblaze', () => {
     });
 
     await test.step('Then debería recibir un status 200 y un cuerpo de respuesta vacío', async () => {
-      //TODO añadir a conclusiones que no tiene buenas prácticas los status
       expect(response.status()).toBe(HttpStatus.OK);
       const body = await response.json();
+      test.info().annotations.push({ type: 'info', description: `body: ${JSON.stringify(body)}` });
       expect(Object.keys(body).length).toBe(0);// La API de demoblaze devuelve un objeto vacío {} para un registro exitoso.
       expect(body).not.toHaveProperty('errorMessage');
-      console.log(ApiSuccessMessages.USER_REGISTERED);//TODO cambiar el console.log por log de playwright
+      test.info().annotations.push({ type: 'info', description: `${ApiSuccessMessages.USER_REGISTERED}: ${credentials.user}` });
+
     });
 
   });
@@ -130,7 +131,7 @@ test.describe.serial('Pruebas API para Demoblaze', () => {
       const body = await response.json();
       expect(body).toHaveProperty('errorMessage');
       expect(body.errorMessage).not.toBeNull();
-      console.log(ApiSuccessMessages.ERROR_EXPECTED);//TODO cambiar a log de playwright
+      test.info().annotations.push({ type: 'info', description: `${ApiSuccessMessages.ERROR_EXPECTED}: ${JSON.stringify(body)}` });
     });
 
   });
