@@ -50,5 +50,11 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
+
+    {
+      name: 'api-tests',
+      use: {},
+      testMatch: /.*api.spec.ts/,  
+    }
   ],
 });
