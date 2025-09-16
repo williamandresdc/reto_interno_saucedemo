@@ -3,7 +3,7 @@
 
 import { TEST_CHECKOUT_DATA, TEST_USERS } from '../src/data/test-data';
 import { ProductInfo } from '../src/interfaces/user-data.interface';
-import { test } from './helpers/fixtures/sauce-demo-fixture';
+import { test, expect } from './helpers/fixtures/sauce-demo-fixture';
 
 /**
   Feature: Flujo de compra en SauceDemo
@@ -30,23 +30,24 @@ test.describe('SauceDemo E-Commerce', () => {
 
     const numberOfProducts = 2;
     let selectedProducts: ProductInfo[] = [];
+    
     await test.step('Given el se encuentra autenticado con credenciales validas', async () => {
       await loginPage.navigateToLoginPage();
-      await loginPage.login(TEST_USERS.STANDARD_USER);
-    });
-    await test.step(`When agrega ${numberOfProducts} productos al carrito de compra`, async () => {
       await test.step('1. Navegar a SauceDemo y realizar login', async () => {
-        await inventoryPage.verifyInventoryPage();
-        await inventoryPage.getAvailableProductsFromPage();
+        await loginPage.login(TEST_USERS.STANDARD_USER);
       });
 
+    });
+    await test.step(`When agrega ${numberOfProducts} productos al carrito de compra`, async () => {
+      await inventoryPage.verifyInventoryPage();
+      await inventoryPage.getAvailableProductsFromPage();
       await test.step('2. Validar que el carrito está vacío inicialmente', async () => {
         await inventoryPage.verifyCartIsEmpty();
       });
     });
 
     await test.step('Then el contador del carrito debería reflejar la cantidad de productos agregados a medida que se agregan', async () => {
-      await test.step(`3. Agregar ${numberOfProducts} productos aleatorios al carrito`, async () => {
+      await test.step(`3. Agregar ${numberOfProducts} productos aleatorios al carrito y verificar contador`, async () => {
         selectedProducts = await inventoryPage.addProductsToCart(numberOfProducts);
       });
     });
